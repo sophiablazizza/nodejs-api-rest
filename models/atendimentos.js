@@ -4,11 +4,11 @@ const conexao = require ('../infraestrutura/conexao')
 
 class Atendimento {
     adiciona (atendimento, res) {
-        const dataCriacao = moment(). format ('YYYY-MM-DD HH:MM:SS')
-        const data = moment(atendimento, data, 'DD/MM/YYYY'). format ('YYYY-MM-DD HH:MM:SS')
+        const dataCriacao = moment().format('YYYY-MM-DD HH:MM:SS')
+        const data = moment(atendimento.data, 'DD/MM/YYYY'). format ('YYYY-MM-DD HH:MM:SS')
         
         const dataEhValida = moment (data).isSameOrAfter(dataCriacao)
-        const clienteEhValido = atentimento.cliente.length >= 5
+        const clienteEhValido = atendimento.cliente.length >= 5
 
         const validacoes = [
             {
@@ -44,6 +44,47 @@ class Atendimento {
         }
 
         
+    }
+
+    lista (res) {
+        const sql = 'SELECT * FROM Atendimentos'
+
+        conexao.query(sql, (erro, resultados) => {
+            if (erro) {
+                res.status(400).json(erro)
+            } else {
+                res.status(200).json(resultados)
+            }
+        })
+    }
+
+    buscaPorId(id, resposta) {
+        const sql = `SELECT * FROM Atendimentos WHERE id=${id}`
+
+        conexao.query(sql, (erro, resultados) => {
+            const atendimento = resultados[0]
+            if(erro) {
+                res.status(400).json(erro)
+            } else {
+                res.status(200).json(atendimento)
+            }
+        })
+    }
+
+    alterar (id, valores, res) {
+        if(valores.data) {
+            valores.data = moment(valores.data, 'DD/MM/YYYY').format('YYYY-MM-DD HH:MM:SS')
+        }
+        
+        const sql = 'UPDATE Atendimentos SET ? WHERE id=?'
+
+        conexao.query(sql, [valores,id], (erro, resultados) => {
+            if (erro) {
+                res.status(400).json(erro)
+            } else {
+                res.status(200).json(resultados)
+            }
+        })
     }
 }
 
