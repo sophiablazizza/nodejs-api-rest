@@ -23,4 +23,10 @@ module.exports = app => {
 
         Atendimento.altera(id,valores, res)
     })
+
+    app.delete('/atendimentos/:id', (req, res) => {
+        const id = parseInt (rep.params.id)
+
+        Atendimento.deleta(id, res)
+    })
 }
